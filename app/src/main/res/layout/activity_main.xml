@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="#F5F5F5">
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@android:drawable/ic_menu_camera"
+        android:tint="#1976D2"
+        android:layout_marginBottom="24dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PLI Form Scanner"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#212121"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Real-time form data extraction"
+        android:textSize="16sp"
+        android:textColor="#757575"
+        android:layout_marginBottom="48dp"/>
+
+    <Button
+        android:id="@+id/btnStartScanner"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="Start Scanner"
+        android:textSize="18sp"
+        android:backgroundTint="#1976D2"/>
+
+    <Button
+        android:id="@+id/btnViewSaved"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="View Saved Forms"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#388E3C"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="✓ Works 100% offline\n✓ No internet required\n✓ Auto field detection"
+        android:textSize="14sp"
+        android:textColor="#616161"
+        android:layout_marginTop="32dp"
+        android:gravity="start"/>
+
+</LinearLayout>
