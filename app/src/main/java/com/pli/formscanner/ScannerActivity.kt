@@ -45,6 +45,13 @@ class ScannerActivity : AppCompatActivity() {
     
     // Loading state
     private var isLoading = false
+    
+    // OCR text visibility
+    private var isOcrTextExpanded = true
+    
+    // Multi-scan support
+    private var returnToAggregator = false
+    private var accumulatedOcrText = StringBuilder()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +59,9 @@ class ScannerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         cameraExecutor = Executors.newSingleThreadExecutor()
+        
+        // Check if we're returning to aggregator
+        returnToAggregator = intent.getBooleanExtra("returnToAggregator", false)
 
         setupRecyclerView()
         setupUI()
@@ -69,12 +79,29 @@ class ScannerActivity : AppCompatActivity() {
     private fun setupUI() {
         binding.btnBack.setOnClickListener { finish() }
         
+        // OCR Text toggle
+        binding.btnToggleOcrText.setOnClickListener {
+            isOcrTextExpanded = !isOcrTextExpanded
+            binding.ocrTextScrollView.visibility = if (isOcrTextExpanded) View.VISIBLE else View.GONE
+            binding.btnToggleOcrText.rotation = if (isOcrTextExpanded) 180f else 0f
+        }
+        
         binding.btnSaveForm.setOnClickListener { 
             if (extractedFields.isEmpty()) {
                 Toast.makeText(this, "No fields detected yet", Toast.LENGTH_SHORT).show()
             } else {
                 saveFormData()
             }
+        }
+        
+        // Update button text for multi-scan mode
+        if (returnToAggregator) {
+            binding.btnSaveForm.text = "Add to Multi-Scan"
+        }
+        
+        // Manual mapping button
+        binding.btnManualMapping.setOnClickListener {
+            openManualMapping()
         }
 
         // Manual capture button
@@ -210,6 +237,10 @@ class ScannerActivity : AppCompatActivity() {
             .addOnSuccessListener { visionText ->
                 lifecycleScope.launch {
                     try {
+                        // Display OCR text
+                        displayOcrText(visionText.text)
+                        
+                        // Extract fields
                         val newFields = textExtractor.extractFields(visionText.text)
                         updateExtractedFields(newFields)
                     } catch (e: Exception) {
@@ -332,6 +363,21 @@ class ScannerActivity : AppCompatActivity() {
         }
     }
 
+    private fun displayOcrText(text: String) {
+        runOnUiThread {
+            if (text.isNotBlank()) {
+                // Accumulate OCR text for multi-scan
+                if (accumulatedOcrText.isNotEmpty()) {
+                    accumulatedOcrText.append("\n\n--- Next Scan ---\n\n")
+                }
+                accumulatedOcrText.append(text)
+                
+                binding.ocrTextCard.visibility = View.VISIBLE
+                binding.tvOcrText.text = accumulatedOcrText.toString()
+            }
+        }
+    }
+    
     private fun showLoading(show: Boolean) {
         runOnUiThread {
             isLoading = show
@@ -351,9 +397,40 @@ class ScannerActivity : AppCompatActivity() {
     }
 
     private fun saveFormData() {
-        val intent = Intent(this, FormDataActivity::class.java)
-        intent.putParcelableArrayListExtra("extractedFields", ArrayList(extractedFields))
-        startActivity(intent)
+        if (returnToAggregator) {
+            // Return to aggregator with scan data
+            val resultIntent = Intent()
+            resultIntent.putExtra("ocrText", accumulatedOcrText.toString())
+            resultIntent.putParcelableArrayListExtra("extractedFields", ArrayList(extractedFields))
+            setResult(RESULT_OK, resultIntent)
+            finish()
+        } else {
+            // Go directly to form data
+            val intent = Intent(this, FormDataActivity::class.java)
+            intent.putParcelableArrayListExtra("extractedFields", ArrayList(extractedFields))
+            startActivity(intent)
+        }
+    }
+    
+    /**
+     * Open manual mapping activity as fallback
+     */
+    private fun openManualMapping() {
+        val ocrText = accumulatedOcrText.toString()
+        
+        if (ocrText.isBlank()) {
+            Toast.makeText(this, "No OCR text available. Please scan a document first.", Toast.LENGTH_LONG).show()
+            return
+        }
+        
+        val intent = Intent(this, ManualMappingActivity::class.java)
+        intent.putExtra("ocrText", ocrText)
+        intent.putExtra("returnToAggregator", returnToAggregator)
+        if (returnToAggregator) {
+            startActivityForResult(intent, REQUEST_MANUAL_MAPPING)
+        } else {
+            startActivity(intent)
+        }
     }
 
     override fun onDestroy() {
@@ -370,7 +447,18 @@ class ScannerActivity : AppCompatActivity() {
         updateScanModeUI()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        
+        if (requestCode == REQUEST_MANUAL_MAPPING && resultCode == RESULT_OK && data != null) {
+            // Manual mapping completed, return to aggregator
+            setResult(RESULT_OK, data)
+            finish()
+        }
+    }
+
     companion object {
         private const val TAG = "ScannerActivity"
+        private const val REQUEST_MANUAL_MAPPING = 201
     }
 }

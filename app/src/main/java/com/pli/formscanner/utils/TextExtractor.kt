@@ -29,15 +29,25 @@ class TextExtractor(private val context: Context) {
         val documentType = DocumentDetector.detectDocumentType(text)
         Log.d(TAG, "Detected document type: $documentType")
         
-        // Use document-specific extractor
+        // Use document-specific extractor (IMPROVED VERSION)
         val fields = when (documentType) {
             DocumentDetector.DocumentType.AADHAAR -> {
-                Log.d(TAG, "Using Aadhaar extractor")
-                AadhaarExtractor.extractFields(text, lines)
+                Log.d(TAG, "Using IMPROVED Aadhaar extractor")
+                try {
+                    ImprovedAadhaarExtractor.extractFields(text, lines)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Improved extractor failed, fallback to old", e)
+                    AadhaarExtractor.extractFields(text, lines)
+                }
             }
             DocumentDetector.DocumentType.PAN -> {
-                Log.d(TAG, "Using PAN extractor")
-                PANExtractor.extractFields(text, lines)
+                Log.d(TAG, "Using IMPROVED PAN extractor")
+                try {
+                    ImprovedPANExtractor.extractFields(text, lines)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Improved PAN extractor failed, fallback to old", e)
+                    PANExtractor.extractFields(text, lines)
+                }
             }
             DocumentDetector.DocumentType.UNKNOWN -> {
                 Log.d(TAG, "Document type unknown, using generic extractor")

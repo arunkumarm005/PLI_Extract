@@ -26,6 +26,10 @@ class MainActivity : AppCompatActivity() {
                 requestCameraPermission()
             }
         }
+        
+        binding.btnMultiScan.setOnClickListener {
+            startMultiScanAggregator()
+        }
 
         binding.btnViewSaved.setOnClickListener {
             startActivity(Intent(this, SavedFormsActivity::class.java))
@@ -64,5 +68,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun startScanner() {
         startActivity(Intent(this, ScannerActivity::class.java))
+    }
+    
+    private fun startMultiScanAggregator() {
+        startActivity(Intent(this, MultiScanAggregatorActivity::class.java))
     }
 }

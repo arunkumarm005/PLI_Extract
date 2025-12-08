@@ -71,6 +71,13 @@ class FormDataActivity : AppCompatActivity() {
         val dobField = extractedFields.find { it.fieldName == "birthdate" }
         val nameField = extractedFields.find { it.fieldName == "firstName" }
         val emailField = extractedFields.find { it.fieldName == "emailAddress" }
+        val genderField = extractedFields.find { it.fieldName == "genderCode" }
+        
+        // Address fields (NEW)
+        val line1Field = extractedFields.find { it.fieldName == "line1" }
+        val line2Field = extractedFields.find { it.fieldName == "line2" }
+        val cityField = extractedFields.find { it.fieldName == "city" }
+        val stateField = extractedFields.find { it.fieldName == "stateCode" }
         val pinField = extractedFields.find { it.fieldName == "zip" }
 
         // Add section header
@@ -93,6 +100,10 @@ class FormDataActivity : AppCompatActivity() {
         // Date of Birth
         dobField?.let { addEditableField(it) }
             ?: addEmptyField("birthdate", "Date of Birth")
+        
+        // Gender (NEW)
+        genderField?.let { addEditableField(it) }
+            ?: addEmptyField("genderCode", "Gender")
 
         addSectionHeader("Contact Information")
 
@@ -103,6 +114,24 @@ class FormDataActivity : AppCompatActivity() {
         // Email
         emailField?.let { addEditableField(it) }
             ?: addEmptyField("emailAddress", "Email Address")
+        
+        addSectionHeader("Address Information")
+        
+        // Address Line 1 (NEW)
+        line1Field?.let { addEditableField(it) }
+            ?: addEmptyField("line1", "Address Line 1")
+        
+        // Address Line 2 (NEW)
+        line2Field?.let { addEditableField(it) }
+            ?: addEmptyField("line2", "Address Line 2")
+        
+        // City (NEW)
+        cityField?.let { addEditableField(it) }
+            ?: addEmptyField("city", "City")
+        
+        // State (NEW)
+        stateField?.let { addEditableField(it) }
+            ?: addEmptyField("stateCode", "State")
 
         // PIN Code
         pinField?.let { addEditableField(it) }

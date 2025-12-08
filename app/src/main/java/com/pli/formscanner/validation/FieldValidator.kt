@@ -152,6 +152,10 @@ object FieldValidator {
             "birthdate" -> validateDateOfBirth(value)
             "emailAddress" -> validateEmail(value)
             "firstName" -> validateName(value)
+            "genderCode" -> validateGender(value)
+            "line1", "line2" -> validateAddressLine(value)
+            "city" -> validateCity(value)
+            "stateCode" -> validateState(value)
             else -> if (value.isBlank()) {
                 ValidationResult(false, "This field is required")
             } else {
@@ -188,6 +192,72 @@ object FieldValidator {
     }
 
     /**
+     * Validates gender
+     */
+    fun validateGender(value: String): ValidationResult {
+        val cleaned = value.trim()
+        val validGenders = setOf("male", "female", "transgender", "m", "f", "other")
+        
+        return when {
+            cleaned.isEmpty() -> ValidationResult(false, "Gender is required")
+            cleaned.lowercase() !in validGenders -> ValidationResult(false, "Gender must be Male, Female, or Transgender")
+            else -> ValidationResult(true)
+        }
+    }
+    
+    /**
+     * Validates address line (optional, but if present should be valid)
+     */
+    fun validateAddressLine(value: String): ValidationResult {
+        val cleaned = value.trim()
+        
+        return when {
+            cleaned.isEmpty() -> ValidationResult(true) // Optional field
+            cleaned.length < 3 -> ValidationResult(false, "Address too short (min 3 characters)")
+            cleaned.length > 100 -> ValidationResult(false, "Address too long (max 100 characters)")
+            else -> ValidationResult(true)
+        }
+    }
+    
+    /**
+     * Validates city name
+     */
+    fun validateCity(value: String): ValidationResult {
+        val cleaned = value.trim()
+        
+        return when {
+            cleaned.isEmpty() -> ValidationResult(true) // Optional field
+            cleaned.length < 2 -> ValidationResult(false, "City name too short")
+            cleaned.length > 50 -> ValidationResult(false, "City name too long")
+            !cleaned.matches(Regex("^[a-zA-Z\\s]+$")) -> ValidationResult(false, "City name should only contain letters")
+            else -> ValidationResult(true)
+        }
+    }
+    
+    /**
+     * Validates state name
+     */
+    fun validateState(value: String): ValidationResult {
+        val cleaned = value.trim()
+        
+        val indianStates = setOf(
+            "andhra pradesh", "arunachal pradesh", "assam", "bihar", "chhattisgarh",
+            "goa", "gujarat", "haryana", "himachal pradesh", "jharkhand",
+            "karnataka", "kerala", "madhya pradesh", "maharashtra", "manipur",
+            "meghalaya", "mizoram", "nagaland", "odisha", "punjab",
+            "rajasthan", "sikkim", "tamil nadu", "telangana", "tripura",
+            "uttar pradesh", "uttarakhand", "west bengal",
+            "delhi", "puducherry", "chandigarh"
+        )
+        
+        return when {
+            cleaned.isEmpty() -> ValidationResult(true) // Optional field
+            cleaned.length < 2 -> ValidationResult(false, "State name too short")
+            else -> ValidationResult(true) // Accept any valid text
+        }
+    }
+
+    /**
      * Get field requirements for UI display
      */
     fun getFieldRequirements(fieldName: String): String {
@@ -199,6 +269,11 @@ object FieldValidator {
             "birthdate" -> "DD/MM/YYYY format"
             "emailAddress" -> "Valid email format"
             "firstName" -> "At least 2 characters"
+            "genderCode" -> "Male, Female, or Transgender"
+            "line1" -> "Address line 1 (optional)"
+            "line2" -> "Address line 2 (optional)"
+            "city" -> "City name (optional)"
+            "stateCode" -> "State name (optional)"
             else -> ""
         }
     }

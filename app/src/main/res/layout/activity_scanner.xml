@@ -10,7 +10,7 @@
         android:id="@+id/previewView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottomControls"
+        app:layout_constraintBottom_toTopOf="@+id/ocrTextCard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -72,6 +72,75 @@
 
     </LinearLayout>
 
+    <!-- OCR Text Display Card (NEW - Collapsible) -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/ocrTextCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="#E0FFFFFF"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomControls"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <!-- Header with Toggle -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Scanned Text (OCR)"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <!-- Toggle Button -->
+                <ImageButton
+                    android:id="@+id/btnToggleOcrText"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Toggle OCR text"
+                    android:src="@android:drawable/arrow_down_float"
+                    android:tint="@android:color/darker_gray" />
+
+            </LinearLayout>
+
+            <!-- Scrollable OCR Text -->
+            <ScrollView
+                android:id="@+id/ocrTextScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="4dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/tvOcrText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:text="No text scanned yet"
+                    android:textColor="@android:color/black"
+                    android:textSize="11sp" />
+            </ScrollView>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
     <!-- Bottom Controls -->
     <LinearLayout
         android:id="@+id/bottomControls"
@@ -128,6 +197,16 @@
                 android:text="Save Form"
                 android:textSize="12sp" />
         </LinearLayout>
+        
+        <!-- Manual Mapping Button -->
+        <Button
+            android:id="@+id/btnManualMapping"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="✏️ Manual Field Mapping"
+            android:textSize="13sp"
+            android:backgroundTint="#FF9800" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

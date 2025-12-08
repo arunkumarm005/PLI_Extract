@@ -44,6 +44,18 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" />
 
+        <activity
+            android:name=".ManualMappingActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".ScannerActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".MultiScanAggregatorActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop" />
+
         <!-- FileProvider for sharing files -->
         <provider
             android:name="androidx.core.content.FileProvider"
