@@ -50,6 +50,15 @@
         android:backgroundTint="#FF9800"/>
 
     <Button
+        android:id="@+id/btnManualEntry"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="✏️ Manual Data Entry"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#9C27B0"/>
+
+    <Button
         android:id="@+id/btnViewSaved"
         android:layout_width="match_parent"
         android:layout_height="64dp"
@@ -57,6 +66,15 @@
         android:textSize="18sp"
         android:layout_marginTop="16dp"
         android:backgroundTint="#388E3C"/>
+
+    <Button
+        android:id="@+id/btnViewManualProposals"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="📋 View Manual Proposals"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#00796B"/>
 
     <TextView
         android:layout_width="wrap_content"

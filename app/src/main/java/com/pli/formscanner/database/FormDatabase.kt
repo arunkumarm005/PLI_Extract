@@ -6,10 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [FormEntity::class], version = 1, exportSchema = false)
-@TypeConverters(Converters::class)
+@Database(entities = [FormEntity::class, ProposalEntity::class], version = 2, exportSchema = false)
+@TypeConverters(Converters::class, ProposalConverters::class)
 abstract class FormDatabase : RoomDatabase() {
     abstract fun formDao(): FormDao
+    abstract fun proposalDao(): ProposalDao
 
     companion object {
         @Volatile

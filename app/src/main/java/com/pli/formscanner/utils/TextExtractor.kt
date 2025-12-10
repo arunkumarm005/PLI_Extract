@@ -29,15 +29,20 @@ class TextExtractor(private val context: Context) {
         val documentType = DocumentDetector.detectDocumentType(text)
         Log.d(TAG, "Detected document type: $documentType")
         
-        // Use document-specific extractor (IMPROVED VERSION)
+        // Use document-specific extractor (ADVANCED VERSION for photocopies)
         val fields = when (documentType) {
             DocumentDetector.DocumentType.AADHAAR -> {
-                Log.d(TAG, "Using IMPROVED Aadhaar extractor")
+                Log.d(TAG, "Using ADVANCED Aadhaar extractor v4.0 (Photocopy optimized)")
                 try {
-                    ImprovedAadhaarExtractor.extractFields(text, lines)
+                    AdvancedAadhaarExtractor.extractFields(text, lines)
                 } catch (e: Exception) {
-                    Log.e(TAG, "Improved extractor failed, fallback to old", e)
-                    AadhaarExtractor.extractFields(text, lines)
+                    Log.e(TAG, "Advanced extractor failed, fallback to improved", e)
+                    try {
+                        ImprovedAadhaarExtractor.extractFields(text, lines)
+                    } catch (e2: Exception) {
+                        Log.e(TAG, "Improved extractor failed, fallback to basic", e2)
+                        AadhaarExtractor.extractFields(text, lines)
+                    }
                 }
             }
             DocumentDetector.DocumentType.PAN -> {

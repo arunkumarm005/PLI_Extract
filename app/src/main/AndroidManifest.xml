@@ -56,6 +56,18 @@
             android:parentActivityName=".MainActivity"
             android:launchMode="singleTop" />
 
+        <activity
+            android:name=".ManualEntryActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ManualProposalsActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- FileProvider for sharing files -->
         <provider
             android:name="androidx.core.content.FileProvider"

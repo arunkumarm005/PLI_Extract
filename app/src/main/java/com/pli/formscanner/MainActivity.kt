@@ -31,8 +31,16 @@ class MainActivity : AppCompatActivity() {
             startMultiScanAggregator()
         }
 
+        binding.btnManualEntry.setOnClickListener {
+            startManualEntry()
+        }
+
         binding.btnViewSaved.setOnClickListener {
             startActivity(Intent(this, SavedFormsActivity::class.java))
+        }
+
+        binding.btnViewManualProposals.setOnClickListener {
+            startActivity(Intent(this, ManualProposalsActivity::class.java))
         }
     }
 
@@ -72,5 +80,9 @@ class MainActivity : AppCompatActivity() {
     
     private fun startMultiScanAggregator() {
         startActivity(Intent(this, MultiScanAggregatorActivity::class.java))
+    }
+    
+    private fun startManualEntry() {
+        startActivity(Intent(this, ManualEntryActivity::class.java))
     }
 }
